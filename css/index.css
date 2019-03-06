@@ -1,0 +1,64 @@
+body {
+  background-color: #F4F4F4;
+  color: #595959;
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #242E2C;
+}
+
+.IdenticonBadge {
+  display: flex;
+  align-items: center;
+}
+
+.IdenticonBadge__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  color: white;
+  font-size: 1.333rem;
+  height: 42px;
+  margin-right: 1rem;
+  width: 42px;
+}
+
+.IdenticonBadge__name {
+  font-size: 1.333rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.Dropdown {
+  margin: 1rem 0;
+}
+
+.Dropdown__trigger {
+  background: white;
+  border: 1px solid #DDDDDD;
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+.Dropdown__options {
+  background: white;
+  border: 1px solid #DDDDDD;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  top: 5px;
+}
+
+.Dropdown__option {
+  padding: 1rem;
+}
+
+.App {
+  margin: 2rem auto;
+  width: 540px;
+}

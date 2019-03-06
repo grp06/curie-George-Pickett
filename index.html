@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Curie</title>
+  <link rel="stylesheet" media="all" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
+  <link rel="stylesheet" media="all" href="css/index.css" />
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="text/babel" data-presets="react">
+
+    //======
+    // DATA
+    //======
+
+    const TEAMS = [
+      {
+        id: 1,
+        name: "Blue Dot",
+        identicolor: "#2A8ED1"
+      },
+      {
+        id: 2,
+        name: "Cofounders",
+        identicolor: "#1CC7D0"
+      },
+      {
+        id: 3,
+        name: "Product",
+        identicolor: "#FEB414"
+      },
+      {
+        id: 4,
+        name: "Growth",
+        identicolor: "#17CF6D"
+      }
+    ];
+
+    const TEAM_MEMBERS = [
+      {
+        id: 1,
+        name: "Will Goto",
+        identicolor: "#2A8ED1",
+        teams: [1, 2, 3, 4]
+      },
+      {
+        id: 2,
+        name: "Macgill Davis",
+        identicolor: "#1CC7D0",
+        teams: [1, 2, 3]
+      },
+      {
+        id: 3,
+        name: "Sheel Gupta",
+        identicolor: "#FEB414",
+        teams: [1, 4]
+      },
+      {
+        id: 4,
+        name: "Kush Panjabi",
+        identicolor: "#17CF6D",
+        teams: [1, 4]
+      },
+      {
+        id: 5,
+        name: "Asli Kimya",
+        identicolor: "#FF5263",
+        teams: [1, 3]
+      },
+      {
+        id: 6,
+        name: "Justine De Caires",
+        identicolor: "#866EFF",
+        teams: [1, 3]
+      },
+      {
+        id: 7,
+        name: "Lana Zheng",
+        identicolor: "#C7573E",
+        teams: [1, 4]
+      },
+      {
+        id: 8,
+        name: "Tosh Velaga",
+        identicolor: "#5EB1FF",
+        teams: [1, 4]
+      },
+      {
+        id: 9,
+        name: "Jade Hornes",
+        identicolor: "#FF6E4A",
+        teams: [1, 4]
+      }
+    ];
+
+
+    //===========================
+    // IDENTICON BADGE COMPONENT
+    //===========================
+
+    // This is a simple component that takes a team object
+    // and renders the first letter of the team name in an
+    // icon-like display followed by the team name.
+
+    const IdenticonBadge = ({ team }) => (
+      <div className="IdenticonBadge">
+        <div
+          className="IdenticonBadge__icon"
+          style={{ backgroundColor: team.identicolor }}
+        >
+          {team.name[0]}
+        </div>
+
+        <p className="IdenticonBadge__name">
+          {team.name}
+        </p>
+      </div>
+    );
+
+
+    //====================
+    // DROPDOWN COMPONENT
+    //====================
+
+    // This component is responsible for holding a selected
+    // team in state. When the user clicks on this component
+    // it should toggle the dropdown. When the user clicks on
+    // a team in the dropdown, it should update the selected
+    // team in state.
+
+    class Dropdown extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          selectedTeam: TEAMS[0],
+          shouldShowOptions: false
+        }
+      }
+
+      // EVENT HANDLERS
+
+      onTriggerClick() {
+        const { shouldShowOptions } = this.state;
+
+        this.setState({
+          shouldShowOptions: !shouldShowOptions
+        });
+      }
+
+      onOptionClick(team) {
+        this.setState({
+          selectedTeam: team,
+          shouldShowOptions: false
+        });
+      }
+
+      // RENDER FUNCTIONS
+
+      renderTrigger() {
+        const { selectedTeam } = this.state;
+        return (
+          <div
+            className="Dropdown__trigger"
+            onClick={this.onTriggerClick}
+          >
+            <IdenticonBadge team={selectedTeam} />
+          </div>
+        );
+      }
+
+      maybeRenderOptions() {
+        const { shouldShowOptions } = this.state;
+
+        return shouldShowOptions && (
+          <div className="Dropdown__options">
+            {TEAMS.map(team => this.renderOption(team))}
+          </div>
+        );
+      }
+
+      renderOption(team) {
+        return (
+          <div
+            key={team.id}
+            className="Dropdown__option"
+            onClick={this.onOptionClick}
+          >
+            <IdenticonBadge team={team} />
+          </div>
+        );
+      }
+
+      render() {
+        return (
+          <div className="Dropdown">
+            {this.renderTrigger()}
+            {this.maybeRenderOptions()}
+          </div>
+        )
+      }
+    }
+
+
+    //===============
+    // APP COMPONENT
+    //===============
+
+    // This is the top-level component for the entire
+    // React application.
+
+    class App extends React.Component {
+      render() {
+        return (
+          <div className="App">
+            <h1>Select a team</h1>
+
+            <Dropdown />
+          </div>
+        );
+      }
+    }
+
+
+    //=====================
+    // RENDER APP INTO DOM
+    //=====================
+
+    ReactDOM.render(<App />, document.getElementById('app'));
+  </script>
+</body>
+</html>
