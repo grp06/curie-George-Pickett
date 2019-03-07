@@ -19,13 +19,13 @@ This is a multi-step exercise intended to evaluate and emulate, as best as we ca
 
 ## Setup
 
-First, we like you to setup a repository in [GitHub](https://github.com) for this exercise. If you do not have a GitHub account, please create one. The service is free and easy to use. If you do not have any experience using Git, please contact [Will Goto](mailto:will@humbledot.com).
+First, we'd like you to setup a repository in [GitHub](https://github.com) for this exercise. If you do not have a GitHub account, please create one. The service is free and easy to use. If you do not have any experience using Git, please contact [Will Goto](mailto:will@humbledot.com).
 
 1. Create a new repository, name it `curie-[first name]-[last name]`. Do not include `[` or `]` in the name.
 2. Keep the repository public.
 3. Keep `Initialize this repository with a README` unchecked.
-4. On your computer's terminal `cd` into this directory named `curie`.
-5. Follow the instructions in GitHub to upload this `curie` directory to the new created repository. It should look something like the following:
+4. On your computer's terminal `cd` into this directory (named `curie`).
+5. Follow the instructions in GitHub to upload this directory to the newly created repository. It should look something like the following:
 
 ```
 git init
@@ -63,8 +63,8 @@ Now we want to add a second dropdown that shows the team members of the selected
 
 Specs:
 
-1. When you select a team, only the team members that belong to that team will show in the second dropdown. Team members belong to a team if they have the team `id` included in their `teams` array.
+1. When you select a team, only the team members that belong to that team should show in the second dropdown. Team members belong to a team if they have the team `id` included in their `teams` array.
 2. Selecting a new team from the top dropdown should always reset the bottom dropdown (i.e. you cannot have a team member selected who is not part of the selected team).
 3. Clicking on the top button while the bottom dropdown is open, should close the bottom dropdown and open the top dropdown.
 
-Please commit and push your work as you would in any work environment to easily allow others to review your changes. Ideally, create one pull request with all of your commits. Once you are finished, please send me an email and include a link to the pull request so that we can review your work!
+Please commit and push your work as you would in any work environment to easily allow others to review your changes. Ideally, create one pull request with all of your commits. Once you are finished, please send [Will Goto](mailto:will@humbledot.com) an email and include a link to the pull request so that we can review your work!
