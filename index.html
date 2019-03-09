@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Curie</title>
@@ -9,6 +10,7 @@
   <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 </head>
+
 <body>
   <div id="app"></div>
   <script type="text/babel" data-presets="react">
@@ -144,12 +146,19 @@
 
       // EVENT HANDLERS
 
-      onTriggerClick() {
+      onTriggerClick = () => {
         const { shouldShowOptions } = this.state;
 
         this.setState({
           shouldShowOptions: !shouldShowOptions
         });
+      }
+
+      closeMenu = () => {
+        console.log('tyr to close menu')
+        this.setState({
+          shouldShowOptions: false,
+        })
       }
 
       onOptionClick(team) {
@@ -167,6 +176,8 @@
           <div
             className="Dropdown__trigger"
             onClick={this.onTriggerClick}
+            onKeyPress={this.onTriggerClick}
+            tabIndex="1"
           >
             <IdenticonBadge team={selectedTeam} />
           </div>
@@ -177,7 +188,7 @@
         const { shouldShowOptions } = this.state;
 
         return shouldShowOptions && (
-          <div className="Dropdown__options">
+          <div className="Dropdown__options" tabIndex="1">
             {TEAMS.map(team => this.renderOption(team))}
           </div>
         );
@@ -188,7 +199,9 @@
           <div
             key={team.id}
             className="Dropdown__option"
-            onClick={this.onOptionClick}
+            onClick={() => this.onOptionClick(team)}
+            tabIndex="1"
+            onKeyPress={() => this.onOptionClick(team)}
           >
             <IdenticonBadge team={team} />
           </div>
@@ -198,9 +211,11 @@
       render() {
         return (
           <div className="Dropdown">
-            {this.renderTrigger()}
-            {this.maybeRenderOptions()}
-          </div>
+              {this.renderTrigger()}
+              {this.maybeRenderOptions()}
+              <div onClick={this.closeMenu} className="closeMenuOverlay"></div>
+
+            </div>
         )
       }
     }
@@ -216,7 +231,7 @@
     class App extends React.Component {
       render() {
         return (
-          <div className="App">
+          <div className="App" onClick={this.closeMenu}>
             <h1>Select a team</h1>
 
             <Dropdown />
@@ -233,4 +248,5 @@
     ReactDOM.render(<App />, document.getElementById('app'));
   </script>
 </body>
+
 </html>
