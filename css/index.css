@@ -56,6 +56,8 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 5px;
   padding: 1rem;
   z-index: 100;
+  position: relative;
+
 }
 
 .Dropdown__options {

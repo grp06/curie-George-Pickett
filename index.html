@@ -99,153 +99,194 @@
       }
     ];
 
+    const IdenticonBadge = ({ team }) => {
+      const getInitial = team => {
+        if (team.name) {
+          return team.name[0];
+        }
+        return team[0].name[0];
+      };
 
-    //===========================
-    // IDENTICON BADGE COMPONENT
-    //===========================
+      const getName = name => {
+        if (team.name) {
+          return team.name;
+        }
+        return name[0].name;
+      };
 
-    // This is a simple component that takes a team object
-    // and renders the first letter of the team name in an
-    // icon-like display followed by the team name.
+      const getColor = team => {
+        if (team.name) {
+          return team.identicolor;
+        }
+        return team[0].identicolor;
+      };
 
-    const IdenticonBadge = ({ team }) => (
-      <div className="IdenticonBadge">
-        <div
-          className="IdenticonBadge__icon"
-          style={{ backgroundColor: team.identicolor }}
-        >
-          {team.name[0]}
+      return (
+        <div className="IdenticonBadge">
+          <div
+            className="IdenticonBadge__icon"
+            style={{ backgroundColor: getColor(team) }}
+          >
+            {getInitial(team)}
+          </div>
+
+          <p className="IdenticonBadge__name">{getName(team)}</p>
         </div>
+      );
+    };
 
-        <p className="IdenticonBadge__name">
-          {team.name}
-        </p>
-      </div>
-    );
+    const Dropdown = ({ renderTrigger, maybeRenderOptions, type }) => {
+      return (
+        <div className="Dropdown">
+          {renderTrigger(type)}
+          {maybeRenderOptions(type)}
+        </div>
+      );
+    };
 
-
-    //====================
-    // DROPDOWN COMPONENT
-    //====================
-
-    // This component is responsible for holding a selected
-    // team in state. When the user clicks on this component
-    // it should toggle the dropdown. When the user clicks on
-    // a team in the dropdown, it should update the selected
-    // team in state.
-
-    class Dropdown extends React.Component {
+    class App extends React.Component {
       constructor(props) {
         super(props);
 
         this.state = {
           selectedTeam: TEAMS[0],
-          shouldShowOptions: false
+          selectedMember: TEAM_MEMBERS[0],
+          filteredMembers: this.filterTeamMembers(1),
+          shouldShowOptions: {
+            teams: false,
+            members: false
+          }
+        };
+      }
+
+      onTriggerClick = triggerType => {
+        const { shouldShowOptions } = this.state;
+        const clickedDropdownVal = shouldShowOptions[triggerType];
+
+        this.setState({
+          shouldShowOptions: {
+            [triggerType]: !clickedDropdownVal
+          }
+        });
+      };
+
+      closeMenu = () => {
+        this.setState({
+          shouldShowOptions: {
+            teams: false,
+            members: false
+          }
+        });
+      };
+
+      filterTeamMembers = id => {
+        const filtered = TEAM_MEMBERS.filter(
+          member => member.teams.indexOf(id) > -1
+        );
+        return filtered;
+      };
+
+      onOptionClick(item) {
+        const memberClicked = item.teams;
+
+        // if the option we click is a member, we want to set selectedMember to that person
+        // otherwise, we should set selectedTeam appropriately and filter the memberList accordingly
+
+        if (memberClicked) {
+          this.setState({
+            selectedMember: item,
+            shouldShowOptions: {
+              teams: false,
+              members: false
+            }
+          });
+        } else {
+          const filteredTeam = this.filterTeamMembers(item.id);
+
+          this.setState({
+            selectedMember: filteredTeam[0],
+            selectedTeam: item,
+            filteredMembers: filteredTeam,
+            shouldShowOptions: {
+              teams: false,
+              members: false
+            }
+          });
         }
       }
 
-      // EVENT HANDLERS
+      renderTrigger(triggerType) {
+        const { selectedTeam, selectedMember } = this.state;
+        const teamOrMember =
+          triggerType === "teams" ? selectedTeam : selectedMember;
 
-      onTriggerClick = () => {
-        const { shouldShowOptions } = this.state;
-
-        this.setState({
-          shouldShowOptions: !shouldShowOptions
-        });
-      }
-
-      closeMenu = () => {
-        console.log('tyr to close menu')
-        this.setState({
-          shouldShowOptions: false,
-        })
-      }
-
-      onOptionClick(team) {
-        this.setState({
-          selectedTeam: team,
-          shouldShowOptions: false
-        });
-      }
-
-      // RENDER FUNCTIONS
-
-      renderTrigger() {
-        const { selectedTeam } = this.state;
         return (
           <div
             className="Dropdown__trigger"
-            onClick={this.onTriggerClick}
-            onKeyPress={this.onTriggerClick}
+            onClick={() => this.onTriggerClick(triggerType)}
+            onKeyPress={() => this.onTriggerClick(triggerType)}
             tabIndex="1"
           >
-            <IdenticonBadge team={selectedTeam} />
+            <IdenticonBadge team={teamOrMember} />
           </div>
         );
       }
 
-      maybeRenderOptions() {
-        const { shouldShowOptions } = this.state;
+      maybeRenderOptions(optionsType) {
+        const { shouldShowOptions, selectedTeam, filteredMembers } = this.state;
+        let arrToMap = optionsType === "teams" ? TEAMS : filteredMembers;
 
-        return shouldShowOptions && (
-          <div className="Dropdown__options" tabIndex="1">
-            {TEAMS.map(team => this.renderOption(team))}
-          </div>
+        return (
+          shouldShowOptions[optionsType] && (
+            <div className="Dropdown__options" tabIndex="1">
+              {arrToMap.map(item => this.renderOption(item))}
+            </div>
+          )
         );
       }
 
-      renderOption(team) {
+      renderOption(option) {
         return (
           <div
-            key={team.id}
+            key={option.id}
             className="Dropdown__option"
-            onClick={() => this.onOptionClick(team)}
+            onClick={() => this.onOptionClick(option)}
             tabIndex="1"
-            onKeyPress={() => this.onOptionClick(team)}
+            onKeyPress={() => this.onOptionClick(option)}
           >
-            <IdenticonBadge team={team} />
+            <IdenticonBadge team={option} />
           </div>
         );
       }
 
       render() {
+        const { shouldShowOptions } = this.state;
+        const aDropdownIsOpen =
+          shouldShowOptions.teams || shouldShowOptions.members;
+
         return (
-          <div className="Dropdown">
-              {this.renderTrigger()}
-              {this.maybeRenderOptions()}
-              <div onClick={this.closeMenu} className="closeMenuOverlay"></div>
-
-            </div>
-        )
-      }
-    }
-
-
-    //===============
-    // APP COMPONENT
-    //===============
-
-    // This is the top-level component for the entire
-    // React application.
-
-    class App extends React.Component {
-      render() {
-        return (
-          <div className="App" onClick={this.closeMenu}>
+          <div className="App">
             <h1>Select a team</h1>
-
-            <Dropdown />
+            <Dropdown
+              renderTrigger={() => this.renderTrigger("teams")}
+              maybeRenderOptions={() => this.maybeRenderOptions("teams")}
+              type="teams"
+            />
+            <Dropdown
+              renderTrigger={() => this.renderTrigger("members")}
+              maybeRenderOptions={() => this.maybeRenderOptions("members")}
+              type="members"
+            />
+            <div
+              onClick={this.closeMenu}
+              className={aDropdownIsOpen ? "closeMenuOverlay" : ""}
+            />
           </div>
         );
       }
     }
 
-
-    //=====================
-    // RENDER APP INTO DOM
-    //=====================
-
-    ReactDOM.render(<App />, document.getElementById('app'));
+    ReactDOM.render(<App />, document.getElementById("app"));
   </script>
 </body>
 
